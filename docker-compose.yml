@@ -1,0 +1,56 @@
+version: "3.6"
+
+x-shared-environment: &shared-environment
+  restart: unless-stopped
+  networks:
+    - vehicle_management_chat_network
+
+services:
+  server:
+    <<: *shared-environment
+    image: node:22.19.0
+    container_name: vehicle_management_server
+    environment:
+      DB_URL: postgres
+      NODE_ENV: development
+      DATABASE_URL: 'postgres://postgres:info@postgres:5432/vehicle_management'
+      DB_HOST: postgres
+      DB_USER: postgres
+      DB_PASSWORD: info
+      DB_NAME: vehicle_management
+      DB_PORT: 5432
+    working_dir: /server
+    volumes:
+      - ./server:/server
+      - /server/node_modules
+    command: ["sh", "-c", "npm install -g pnpm && pnpm install && npx drizzle-kit migrate && pnpm start:dev"]
+    ports:
+      - 3000:3000
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  postgres:
+    <<: *shared-environment
+    image: postgres
+    container_name: vehicle_management_postgres
+    environment:
+      POSTGRES_DB: vehicle_management
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: info
+    volumes:
+      - postgres-data:/var/lib/postgresql/data/
+    ports:
+      - 5432:5432
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+volumes:
+  postgres-data:
+
+networks:
+  vehicle_management_chat_network:
+    external: true
