@@ -3,13 +3,30 @@ version: "3.6"
 x-shared-environment: &shared-environment
   restart: unless-stopped
   networks:
-    - vehicle_management_chat_network
+    - vehicle_management_network
 
 services:
   server:
     <<: *shared-environment
     image: node:22.19.0
     container_name: vehicle_management_server
+    working_dir: /server
+    volumes:
+      - ./server:/server
+      - /server/node_modules
+    command: ["sh", "-c", "npm install -g pnpm && pnpm install && pnpm start:dev"]
+    ports:
+      - 3000:3000
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
+  vehicles-microservice:
+    <<: *shared-environment
+    image: node:22.19.0
+    container_name: vehicle_management_vehicles_microservice
     environment:
       DB_URL: postgres
       NODE_ENV: development
@@ -19,15 +36,15 @@ services:
       DB_PASSWORD: info
       DB_NAME: vehicle_management
       DB_PORT: 5432
-    working_dir: /server
+    working_dir: /vehicles-microservice
     volumes:
-      - ./server:/server
-      - /server/node_modules
+      - ./vehicles-microservice:/vehicles-microservice
+      - /vehicles-microservice/node_modules
     command: ["sh", "-c", "npm install -g pnpm && pnpm install && npx drizzle-kit migrate && pnpm start:dev"]
-    ports:
-      - 3000:3000
     depends_on:
       postgres:
+        condition: service_healthy
+      rabbitmq:
         condition: service_healthy
 
   postgres:
@@ -48,9 +65,25 @@ services:
       timeout: 3s
       retries: 5
 
+  rabbitmq:
+    <<: *shared-environment
+    image: rabbitmq:management
+    container_name: vehicle_management_rabbitmq
+    ports:
+      - 5672:5672
+      - 15672:15672
+    environment:
+      RABBITMQ_DEFAULT_USER: info
+      RABBITMQ_DEFAULT_PASS: info
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
 volumes:
   postgres-data:
 
 networks:
-  vehicle_management_chat_network:
+  vehicle_management_network:
     external: true
