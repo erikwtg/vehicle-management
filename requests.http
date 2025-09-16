@@ -1,0 +1,33 @@
+### Vehicle - List All Vehicles
+GET http://localhost:3000/vehicle
+
+### Vehicle - List Vehicle by ID
+GET http://localhost:3000/vehicle/1
+
+### Vehicle - Create Vehicle
+POST http://localhost:3000/vehicle
+Content-Type: application/json
+
+{
+  "plate": "ABC123",
+  "chassis": "1234567890",
+  "reindeer": "1234567890",
+  "model": "Model X",
+  "brand": "Brand X",
+  "year": 2020
+}
+
+### Vehicle - Update Vehicle
+PATCH http://localhost:3000/vehicle/1
+Content-Type: application/json
+
+{
+  "plate": "ABC321",
+  "chassis": "1234567890",
+  "reindeer": "1234567890",
+  "model": "Model X",
+  "brand": "Brand X",
+  "year": 2020
+}
+### Vehicle - Delete Vehicle
+DELETE http://localhost:3000/vehicle/1

@@ -1,0 +1,26 @@
+# Dependencies
+**/node_modules
+
+# Build
+**/dist*
+**/build*
+**/.vite*
+**/.output*
+
+# Docker
+**/docker*
+
+# Logs
+logs
+*.log
+
+# PNPM
+**/.pnpm-store
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
