@@ -8,11 +8,16 @@ export class VehicleService {
   constructor(private readonly vehicleRepository: VehicleRepository) {}
 
   async create(createVehicleDto: CreateVehicleDto) {
-    return await this.vehicleRepository.createVehicle(createVehicleDto);
+    return await this.vehicleRepository.createVehicle<CreateVehicleDto>(
+      createVehicleDto,
+    );
   }
 
   async update(id: number, updateVehicleDto: UpdateVehicleDto) {
-    return await this.vehicleRepository.updateVehicle(id, updateVehicleDto);
+    return await this.vehicleRepository.updateVehicle<UpdateVehicleDto>(
+      id,
+      updateVehicleDto,
+    );
   }
 
   async remove(id: number) {
