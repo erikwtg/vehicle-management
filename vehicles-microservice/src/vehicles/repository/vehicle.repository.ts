@@ -53,4 +53,13 @@ export class VehicleRepository {
       .execute()
       .then((rows) => (rows as Vehicle[]) || []);
   }
+
+  async getVehicleByPlate(plate: string): Promise<Vehicle> {
+    return db
+      .select()
+      .from(vehicles)
+      .where(eq(vehicles.plate, plate))
+      .execute()
+      .then((rows) => (rows[0] as Vehicle) || null);
+  }
 }

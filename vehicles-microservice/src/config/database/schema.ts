@@ -11,8 +11,8 @@ export const vehicles = pgTable(
   'vehicles',
   {
     id: serial('id').primaryKey().notNull(),
-    plate: varchar('placa', { length: 255 }).notNull(),
-    chassis: varchar('chassi', { length: 255 }).notNull(),
+    plate: varchar('placa', { length: 255 }).notNull().unique(),
+    chassis: varchar('chassi', { length: 255 }).notNull().unique(),
     reindeer: varchar('renavam', { length: 255 }).notNull(),
     model: varchar('modelo', { length: 255 }).notNull(),
     brand: varchar('marca', { length: 255 }).notNull(),

@@ -13,6 +13,14 @@ export class VehicleService {
   constructor(private readonly vehicleRepository: VehicleRepository) {}
 
   async create(createVehicleDto: CreateVehicleDto) {
+    const existVehicle = await this.vehicleRepository.getVehicleByPlate(
+      createVehicleDto.plate,
+    );
+
+    if (existVehicle) {
+      throw new VehicleAlreadyExistsError('Veículo já existe');
+    }
+
     const vehicle =
       await this.vehicleRepository.createVehicle<CreateVehicleDto>(
         createVehicleDto,
