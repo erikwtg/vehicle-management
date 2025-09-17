@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { db } from '../../config/drizzle/config';
 import { vehicles } from '../../config/database/schema';
-import { eq, asc } from 'drizzle-orm';
+import { eq, gt, asc } from 'drizzle-orm';
 import { Vehicle } from '../entity/vehicle.entity';
+import { CursorPaginationDto } from 'src/common/dto/cursor-pagination.dto';
 
 @Injectable()
 export class VehicleRepository {
@@ -42,12 +43,13 @@ export class VehicleRepository {
       .then((rows) => (rows[0] as Vehicle) || null);
   }
 
-  async getAllVehicles(limit = 20): Promise<Vehicle[]> {
+  async getAllVehicles(pagination: CursorPaginationDto): Promise<Vehicle[]> {
     return db
       .select()
       .from(vehicles)
+      .where(pagination.cursor ? gt(vehicles.id, pagination.cursor) : undefined)
       .orderBy(asc(vehicles.createdAt))
-      .limit(limit)
+      .limit(pagination.limit || 10)
       .execute()
       .then((rows) => (rows as Vehicle[]) || []);
   }

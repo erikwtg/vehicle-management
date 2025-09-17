@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateVehicleDto } from '../dto/create-vehicle.dto';
 import { UpdateVehicleDto } from '../dto/update-vehicle.dto';
 import { VehicleRepository } from '../repository/vehicle.repository';
+import { CursorPaginationDto } from 'src/common/dto/cursor-pagination.dto';
 
 @Injectable()
 export class VehicleService {
@@ -44,8 +45,8 @@ export class VehicleService {
     return removedVehicle;
   }
 
-  async findAll() {
-    const vehicles = await this.vehicleRepository.getAllVehicles();
+  async findAll(pagination: CursorPaginationDto) {
+    const vehicles = await this.vehicleRepository.getAllVehicles(pagination);
 
     if (!vehicles) {
       throw new NotFoundException('Nenhum veículo encontrado');

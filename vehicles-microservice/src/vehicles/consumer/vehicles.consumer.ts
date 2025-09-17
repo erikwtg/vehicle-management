@@ -3,6 +3,7 @@ import { EventPattern, MessagePattern, Payload } from '@nestjs/microservices';
 import { VehicleService } from '../service/vehicle.service';
 import { CreateVehicleDto } from '../dto/create-vehicle.dto';
 import { UpdateVehicleDto } from '../dto/update-vehicle.dto';
+import { CursorPaginationDto } from 'src/common/dto/cursor-pagination.dto';
 
 @Controller()
 export class VehiclesConsumer {
@@ -50,8 +51,8 @@ export class VehiclesConsumer {
   }
 
   @MessagePattern('vehicles_get_all_rpc')
-  async handleVehicleGetAll() {
-    return await this.vehicleService.findAll();
+  async handleVehicleGetAll(@Payload() pagination: CursorPaginationDto) {
+    return await this.vehicleService.findAll(pagination);
   }
 
   @MessagePattern('vehicles_get_one_rpc')

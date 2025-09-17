@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, GatewayTimeoutException } from '@nestjs/common';
 import {
   ClientProxy,
   ClientProxyFactory,
@@ -6,6 +6,7 @@ import {
 } from '@nestjs/microservices';
 import { firstValueFrom, TimeoutError } from 'rxjs';
 import { timeout } from 'rxjs/operators';
+import { CursorPaginationDto } from 'src/common/dto/cursor-pagination.dto';
 
 @Injectable()
 export class VehiclesPublisher {
@@ -33,20 +34,23 @@ export class VehiclesPublisher {
       );
     } catch (error) {
       if (error instanceof TimeoutError) {
-        throw new Error('Request timed out');
+        throw new GatewayTimeoutException('Request timed out');
       }
       throw error;
     }
   }
 
-  async requestWithoutId<R>(pattern: string): Promise<R> {
+  async requestWithoutId<R>(
+    pattern: string,
+    pagination: CursorPaginationDto,
+  ): Promise<R> {
     try {
       return await firstValueFrom(
-        this.client.send<R>(pattern, {}).pipe(timeout(5000)),
+        this.client.send<R>(pattern, pagination).pipe(timeout(5000)),
       );
     } catch (error) {
       if (error instanceof TimeoutError) {
-        throw new Error('Request timed out');
+        throw new GatewayTimeoutException('Request timed out');
       }
       throw error;
     }
@@ -59,7 +63,7 @@ export class VehiclesPublisher {
       );
     } catch (error) {
       if (error instanceof TimeoutError) {
-        throw new Error('Request timed out');
+        throw new GatewayTimeoutException('Request timed out');
       }
       throw error;
     }

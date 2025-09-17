@@ -6,10 +6,12 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { VehicleService } from '../service/vehicle.service';
 import { CreateVehicleDto } from '../dto/create-vehicle.dto';
 import { UpdateVehicleDto } from '../dto/update-vehicle.dto';
+import { CursorPaginationDto } from 'src/common/dto/cursor-pagination.dto';
 
 @Controller('vehicle')
 export class VehicleController {
@@ -21,8 +23,8 @@ export class VehicleController {
   }
 
   @Get()
-  findAll() {
-    return this.vehicleService.findAll();
+  findAll(@Query() cursorPaginationDto: CursorPaginationDto) {
+    return this.vehicleService.findAll(cursorPaginationDto);
   }
 
   @Get(':id')
