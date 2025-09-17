@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateVehicleDto } from '../dto/create-vehicle.dto';
 import { ReturnVehicleDto } from '../dto/return-vehicle.dto';
 import { UpdateVehicleDto } from '../dto/update-vehicle.dto';
@@ -16,10 +16,6 @@ export class VehicleService {
       ReturnVehicleDto
     >('vehicle_created_rpc', createVehicleDto);
 
-    if (!createdVehicle) {
-      throw new NotFoundException('Veículo não foi criado');
-    }
-
     this.vehiclesPublisher.publish('vehicle_created_event', createVehicleDto);
 
     return createdVehicle;
@@ -31,18 +27,10 @@ export class VehicleService {
       ReturnVehicleDto
     >('vehicle_updated_rpc', { id, ...updateVehicleDto });
 
-    if (!updatedVehicle) {
-      throw new NotFoundException('Veículo não foi atualizado');
-    }
-
     this.vehiclesPublisher.publish('vehicle_updated_event', {
       id,
       ...updateVehicleDto,
     });
-
-    if (!updatedVehicle) {
-      throw new NotFoundException('Veículo não foi atualizado');
-    }
 
     return updatedVehicle;
   }
@@ -53,10 +41,6 @@ export class VehicleService {
         'vehicle_deleted_rpc',
         id,
       );
-
-    if (!removedVehicle) {
-      throw new NotFoundException('Veículo não foi removido');
-    }
 
     this.vehiclesPublisher.publish('vehicle_deleted_event', id);
 
@@ -70,10 +54,6 @@ export class VehicleService {
       ReturnVehicleDto[]
     >('vehicles_get_all_rpc', pagination);
 
-    if (!vehicles) {
-      throw new NotFoundException('Nenhum veículo foi encontrado');
-    }
-
     return {
       data: vehicles,
       nextCursor: vehicles.length ? vehicles[vehicles.length - 1].id : null,
@@ -86,10 +66,6 @@ export class VehicleService {
         'vehicles_get_one_rpc',
         id,
       );
-
-    if (!vehicle) {
-      throw new NotFoundException('Veículo não foi encontrado');
-    }
 
     return {
       data: vehicle,

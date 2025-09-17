@@ -1,8 +1,12 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateVehicleDto } from '../dto/create-vehicle.dto';
 import { UpdateVehicleDto } from '../dto/update-vehicle.dto';
 import { VehicleRepository } from '../repository/vehicle.repository';
 import { CursorPaginationDto } from 'src/common/dto/cursor-pagination.dto';
+import {
+  VehicleNotFoundError,
+  VehicleAlreadyExistsError,
+} from 'src/common/errors/vehicle.errors';
 
 @Injectable()
 export class VehicleService {
@@ -15,7 +19,7 @@ export class VehicleService {
       );
 
     if (!vehicle) {
-      throw new NotFoundException('Veículo não foi cadastrado');
+      throw new VehicleAlreadyExistsError('Veículo não foi cadastrado');
     }
 
     return vehicle;
@@ -29,7 +33,7 @@ export class VehicleService {
       );
 
     if (!updatedVehicle) {
-      throw new NotFoundException('Veículo não foi atualizado');
+      throw new VehicleNotFoundError('Veículo não foi atualizado');
     }
 
     return updatedVehicle;
@@ -39,7 +43,7 @@ export class VehicleService {
     const removedVehicle = await this.vehicleRepository.deleteVehicle(id);
 
     if (!removedVehicle) {
-      throw new NotFoundException('Veículo não foi removido');
+      throw new VehicleNotFoundError('Veículo não foi removido');
     }
 
     return removedVehicle;
@@ -49,7 +53,7 @@ export class VehicleService {
     const vehicles = await this.vehicleRepository.getAllVehicles(pagination);
 
     if (!vehicles) {
-      throw new NotFoundException('Nenhum veículo encontrado');
+      throw new VehicleNotFoundError('Nenhum veículo encontrado');
     }
 
     return vehicles;
@@ -59,7 +63,7 @@ export class VehicleService {
     const vehicle = await this.vehicleRepository.getVehicleById(id);
 
     if (!vehicle) {
-      throw new NotFoundException('Veículo não encontrado');
+      throw new VehicleNotFoundError('Veículo não encontrado');
     }
 
     return vehicle;

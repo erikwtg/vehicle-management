@@ -7,16 +7,28 @@ export class ExceptionsFilter implements ExceptionFilter {
   private readonly logger = new Logger(ExceptionsFilter.name);
 
   catch(exception: unknown) {
-    let message = 'Internal RPC error';
+    let payload: any = { message: 'Internal RPC error', statusCode: 500 };
 
     if (exception instanceof RpcException) {
-      message = exception.message;
-    } else if (exception instanceof HttpException) {
-      message = exception.message;
+      payload = exception.getError() || payload;
     }
 
-    this.logger.error(`RPC Error: ${JSON.stringify(message)}`);
+    if (exception instanceof Error && 'statusCode' in exception) {
+      payload = {
+        message: exception.message,
+        statusCode: (exception as any).statusCode,
+      };
+    }
 
-    return throwError(() => new RpcException(message));
+    if (exception instanceof HttpException) {
+      payload = {
+        message: exception.message,
+        statusCode: exception.getStatus(),
+      };
+    }
+
+    this.logger.error(`RPC Error: ${JSON.stringify(payload)}`);
+
+    return throwError(() => new RpcException(payload));
   }
 }

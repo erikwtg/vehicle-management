@@ -22,15 +22,15 @@ export class ExceptionsFilter implements ExceptionFilter {
     let message: any = 'Internal server error';
 
     if (exception instanceof HttpException) {
-      // Erros lançados diretamente na API
       status = exception.getStatus();
       const res = exception.getResponse();
       message = typeof res === 'string' ? res : (res as any).message || message;
     }
 
     if (exception instanceof RpcException) {
-      status = HttpStatus.BAD_REQUEST;
-      message = exception.message;
+      const rpcPayload = exception.getError() as any;
+      status = rpcPayload?.statusCode || HttpStatus.BAD_REQUEST;
+      message = rpcPayload?.message || 'RPC error';
     }
 
     if (
@@ -52,8 +52,6 @@ export class ExceptionsFilter implements ExceptionFilter {
     response.status(status).json({
       statusCode: status,
       message,
-      timestamp: new Date().toISOString(),
-      path: request.url,
     });
   }
 }

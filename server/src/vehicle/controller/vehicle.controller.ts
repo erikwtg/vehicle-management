@@ -7,12 +7,15 @@ import {
   Param,
   Delete,
   Query,
+  UseInterceptors,
 } from '@nestjs/common';
 import { VehicleService } from '../service/vehicle.service';
 import { CreateVehicleDto } from '../dto/create-vehicle.dto';
 import { UpdateVehicleDto } from '../dto/update-vehicle.dto';
 import { CursorPaginationDto } from 'src/common/dto/cursor-pagination.dto';
+import { RpcErrorInterceptor } from 'src/common/interceptors/rpc-exception.interceptor';
 
+@UseInterceptors(RpcErrorInterceptor)
 @Controller('vehicle')
 export class VehicleController {
   constructor(private readonly vehicleService: VehicleService) {}
