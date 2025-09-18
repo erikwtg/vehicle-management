@@ -97,6 +97,20 @@ services:
       interval: 5s
       timeout: 3s
       retries: 5
+  
+  webapp:
+    <<: *shared-environment
+    image: node:22.19.0
+    working_dir: /app
+    container_name: vehicle_management_webapp
+    command: ["sh", "-c", "npm install -g pnpm && pnpm install && pnpm start"]
+    volumes:
+      - ./webapp:/app/
+      - /app/node_modules
+    ports:
+      - 4200:4200
+    depends_on:
+      - server
 
 volumes:
   postgres-data:
