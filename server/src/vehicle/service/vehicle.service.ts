@@ -29,7 +29,7 @@ export class VehicleService implements OnModuleInit {
     );
   }
 
-  async create(createVehicleDto: CreateVehicleDto) {
+  async create(createVehicleDto: CreateVehicleDto): Promise<ReturnVehicleDto> {
     const createdVehicle = await this.circuitBreakerService.call<
       [CreateVehicleDto],
       ReturnVehicleDto
@@ -40,7 +40,10 @@ export class VehicleService implements OnModuleInit {
     return createdVehicle;
   }
 
-  async update(id: number, updateVehicleDto: UpdateVehicleDto) {
+  async update(
+    id: number,
+    updateVehicleDto: UpdateVehicleDto,
+  ): Promise<ReturnVehicleDto> {
     const updatedVehicle = await this.circuitBreakerService.call<
       [UpdateVehicleDto & { id: number }],
       ReturnVehicleDto

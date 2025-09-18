@@ -1,11 +1,5 @@
 import { Controller, Logger } from '@nestjs/common';
-import {
-  Ctx,
-  EventPattern,
-  MessagePattern,
-  Payload,
-  RmqContext,
-} from '@nestjs/microservices';
+import { EventPattern, MessagePattern, Payload } from '@nestjs/microservices';
 import { VehicleService } from '../service/vehicle.service';
 import { CreateVehicleDto } from '../dto/create-vehicle.dto';
 import { UpdateVehicleDto } from '../dto/update-vehicle.dto';
@@ -19,16 +13,15 @@ export class VehiclesConsumer {
   constructor(private readonly vehicleService: VehicleService) {}
 
   @MessagePattern('vehicle_created_rpc')
-  async handleVehicleCreated(
-    @Payload() data: CreateVehicleDto,
-    @Ctx() context: RmqContext,
-  ) {
-    const msgId = context.getMessage().properties.messageId;
-    const key = `vehicle:${data.plate}:${data.chassis}:${msgId}`;
+  async handleVehicleCreated(@Payload() data: CreateVehicleDto) {
+    const key = `vehicle:${data.plate}:${data.chassis}:created`;
 
     const exists = await this.vehicleService.getVehicleIdempotency(key);
     if (exists) {
-      throw new VehicleIdempotencyError('Veículo já foi processado');
+      this.logger.log(
+        '[EVENT] - Veículo criado: ' + JSON.stringify(data) + key,
+      );
+      throw new VehicleIdempotencyError('Veículo já foi cadastrado');
     }
 
     const createdVehicle = await this.vehicleService.create(data);
@@ -48,7 +41,20 @@ export class VehiclesConsumer {
 
   @MessagePattern('vehicle_updated_rpc')
   async handleVehicleUpdated(@Payload() data: UpdateVehicleDto) {
+    const key = `vehicle:${data.plate}:${data.chassis}:updated`;
+
+    const exists = await this.vehicleService.getVehicleIdempotency(key);
+    if (exists) {
+      throw new VehicleIdempotencyError('Veículo já foi atualizado');
+    }
+
     const updatedVehicle = await this.vehicleService.update(data.id, data);
+
+    await this.vehicleService.setVehicleIdempotency(
+      key,
+      String(updatedVehicle.id),
+    );
+
     return updatedVehicle;
   }
 
@@ -59,7 +65,20 @@ export class VehiclesConsumer {
 
   @MessagePattern('vehicle_deleted_rpc')
   async handleVehicleDeleted(@Payload() id: number) {
+    const key = `vehicle:${id}:deleted`;
+
+    const exists = await this.vehicleService.getVehicleIdempotency(key);
+    if (exists) {
+      this.logger.log(
+        '[EVENT] - Veículo deletado: ' + JSON.stringify(id) + key,
+      );
+      throw new VehicleIdempotencyError('Veículo já foi deletado');
+    }
+
     const deletedVehicle = await this.vehicleService.remove(id);
+
+    await this.vehicleService.setVehicleIdempotency(key, 'deleted');
+
     return deletedVehicle;
   }
 

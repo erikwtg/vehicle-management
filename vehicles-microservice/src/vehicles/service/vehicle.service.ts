@@ -23,7 +23,7 @@ export class VehicleService {
       );
 
     if (!vehicle) {
-      throw new VehicleAlreadyExistsError('Veículo não foi cadastrado');
+      throw new VehicleAlreadyExistsError('Veículo já foi cadastrado');
     }
 
     return vehicle;
@@ -37,7 +37,7 @@ export class VehicleService {
       );
 
     if (!updatedVehicle) {
-      throw new VehicleNotFoundError('Veículo não foi atualizado');
+      throw new VehicleNotFoundError('Veículo não foi encontrado');
     }
 
     return updatedVehicle;
@@ -47,7 +47,7 @@ export class VehicleService {
     const removedVehicle = await this.vehicleRepository.deleteVehicle(id);
 
     if (!removedVehicle) {
-      throw new VehicleNotFoundError('Veículo não foi removido');
+      throw new VehicleNotFoundError('Veículo não foi encontrado');
     }
 
     return removedVehicle;
