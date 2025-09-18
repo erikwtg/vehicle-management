@@ -1,11 +1,10 @@
 import { Module } from '@nestjs/common';
-import { AppService } from './app.service';
 import { VehiclesConsumer } from './vehicles/consumer/vehicles.consumer';
 import { VehicleModule } from './vehicles/vehicle.module';
+import { RedisModule } from './redis/redis.module';
 
 @Module({
-  imports: [VehicleModule],
+  imports: [VehicleModule, RedisModule],
   controllers: [VehiclesConsumer],
-  providers: [AppService],
 })
 export class AppModule {}

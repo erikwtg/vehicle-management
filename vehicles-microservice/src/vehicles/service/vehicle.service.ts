@@ -7,20 +7,16 @@ import {
   VehicleNotFoundError,
   VehicleAlreadyExistsError,
 } from 'src/common/errors/vehicle.errors';
+import { RedisService } from 'src/redis/service/redis.service';
 
 @Injectable()
 export class VehicleService {
-  constructor(private readonly vehicleRepository: VehicleRepository) {}
+  constructor(
+    private readonly vehicleRepository: VehicleRepository,
+    private readonly redisService: RedisService,
+  ) {}
 
   async create(createVehicleDto: CreateVehicleDto) {
-    const existVehicle = await this.vehicleRepository.getVehicleByPlate(
-      createVehicleDto.plate,
-    );
-
-    if (existVehicle) {
-      throw new VehicleAlreadyExistsError('Veículo já existe');
-    }
-
     const vehicle =
       await this.vehicleRepository.createVehicle<CreateVehicleDto>(
         createVehicleDto,
@@ -75,5 +71,13 @@ export class VehicleService {
     }
 
     return vehicle;
+  }
+
+  async setVehicleIdempotency(key: string, value: string) {
+    await this.redisService.set(key, value);
+  }
+
+  async getVehicleIdempotency(key: string) {
+    return await this.redisService.get(key);
   }
 }

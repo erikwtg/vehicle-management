@@ -11,3 +11,9 @@ export class VehicleAlreadyExistsError extends RpcException {
     super({ message, statusCode: 409 });
   }
 }
+
+export class VehicleIdempotencyError extends RpcException {
+  constructor(message = 'Veículo já foi processado') {
+    super({ message, statusCode: 409 });
+  }
+}
