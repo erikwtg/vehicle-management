@@ -74,11 +74,15 @@ export class VehicleService implements OnModuleInit {
   ): Promise<CursorPaginationResult<ReturnVehicleDto>> {
     const vehicles = await this.vehiclesPublisher.requestWithoutId<
       ReturnVehicleDto[]
-    >('vehicles_get_all_rpc', pagination);
+    >('vehicles_get_all_rpc', { ...pagination, limit: pagination.limit + 1 });
+
+    const hasMore = vehicles.length > pagination.limit;
+    const data = vehicles.slice(0, pagination.limit);
 
     return {
-      data: vehicles,
-      nextCursor: vehicles.length ? vehicles[vehicles.length - 1].id : null,
+      data,
+      nextCursor: hasMore ? data[data.length - 1].id : null,
+      hasMore,
     };
   }
 
@@ -92,6 +96,7 @@ export class VehicleService implements OnModuleInit {
     return {
       data: vehicle,
       nextCursor: null,
+      hasMore: false,
     };
   }
 }

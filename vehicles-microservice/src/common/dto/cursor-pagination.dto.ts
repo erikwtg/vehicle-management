@@ -4,7 +4,7 @@ export class CursorPaginationDto {
   @IsOptional()
   @IsInt()
   @Min(0)
-  cursor?: number;
+  cursor?: string;
 
   @IsOptional()
   @IsInt()

@@ -4,10 +4,10 @@ export class CursorPaginationDto {
   @IsOptional()
   @IsInt()
   @Min(0)
-  cursor?: number;
+  cursor?: string;
 
   @IsOptional()
   @IsInt()
   @Min(1)
-  limit?: number = 10;
+  limit: number = 10;
 }

@@ -42,7 +42,7 @@ services:
     volumes:
       - ./vehicles-microservice:/vehicles-microservice
       - /vehicles-microservice/node_modules
-    command: ["sh", "-c", "npm install -g pnpm && pnpm install && npx drizzle-kit migrate && pnpm start:dev"]
+    command: ["sh", "-c", "npm install -g pnpm && pnpm install && npx drizzle-kit migrate && pnpm seed && pnpm start:dev"]
     depends_on:
       postgres:
         condition: service_healthy

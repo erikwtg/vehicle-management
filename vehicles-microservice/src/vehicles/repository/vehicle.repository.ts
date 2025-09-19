@@ -47,19 +47,14 @@ export class VehicleRepository {
     return db
       .select()
       .from(vehicles)
-      .where(pagination.cursor ? gt(vehicles.id, pagination.cursor) : undefined)
+      .where(
+        pagination.cursor
+          ? gt(vehicles.id, Number(pagination.cursor))
+          : undefined,
+      )
       .orderBy(asc(vehicles.createdAt))
-      .limit(pagination.limit || 10)
+      .limit(Number(pagination.limit))
       .execute()
       .then((rows) => (rows as Vehicle[]) || []);
-  }
-
-  async getVehicleByPlate(plate: string): Promise<Vehicle> {
-    return db
-      .select()
-      .from(vehicles)
-      .where(eq(vehicles.plate, plate))
-      .execute()
-      .then((rows) => (rows[0] as Vehicle) || null);
   }
 }
