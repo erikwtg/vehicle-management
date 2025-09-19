@@ -11,7 +11,7 @@ docker-compose -f docker-compose.yml up -d --build
 
 echo "Containers started successfully."
 
-if docker ps --filter "network=vehicle_management_network" | grep -q "api"; then
+if docker ps --filter "network=vehicle_management_network" | grep -q "server"; then
   echo "Container is running and connected to the network."
 else
   echo "Container is not running or not connected to the network."

@@ -51,7 +51,7 @@ export class VehicleFormComponent implements OnInit, OnChanges {
       if (this.vehicle && this.isEditing) {
         this.formData.update((prev) => ({
           ...prev,
-          id: this.vehicle?.id || 0,
+          id: this.vehicle?.id,
           plate: this.vehicle?.plate || '',
           chassis: this.vehicle?.chassis || '',
           reindeer: this.vehicle?.reindeer || '',
@@ -155,7 +155,7 @@ export class VehicleFormComponent implements OnInit, OnChanges {
   resetForm() {
     this.formData.update((prev) => ({
       ...prev,
-      id: 0,
+      id: undefined,
       plate: '',
       chassis: '',
       reindeer: '',
