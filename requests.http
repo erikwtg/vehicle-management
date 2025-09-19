@@ -9,12 +9,12 @@ POST http://localhost:3000/vehicle
 Content-Type: application/json
 
 {
-  "plate": "ABC123",
-  "chassis": "1234567890",
-  "reindeer": "1234567890",
-  "model": "Model X",
-  "brand": "Brand X",
-  "year": 2020
+  "brand": "Impreza",
+  "chassis": "SDF897988SDG689SG",
+  "model": "Subaro",
+  "plate": "QDA6172",
+  "reindeer": "83974589346",
+  "year": 2025
 }
 
 ### Vehicle - Update Vehicle

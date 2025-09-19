@@ -18,6 +18,7 @@ export const vehicles = pgTable(
     brand: varchar('marca', { length: 255 }).notNull(),
     year: integer('ano').notNull(),
     createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at').defaultNow().notNull(),
   },
   (table) => ({
     plateIdx: index('placa_idx').on(table.plate),

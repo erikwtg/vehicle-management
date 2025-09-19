@@ -15,6 +15,13 @@
       "when": 1758138618510,
       "tag": "0001_set_vehicle_plate_chassis_unique",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1758319172619,
+      "tag": "0002_add_vehicle_updated_at",
+      "breakpoints": true
     }
   ]
 }

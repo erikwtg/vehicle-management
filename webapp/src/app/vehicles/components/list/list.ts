@@ -11,24 +11,7 @@ import {
   TablePageEvent,
 } from '../../../components/table/table.component';
 import { HttpClient } from '@angular/common/http';
-
-export interface Vehicle {
-  id?: string;
-  plate: string;
-  chassis: string;
-  reindeer: string;
-  model: string;
-  brand: string;
-  year: number;
-  createdAt?: string;
-  updatedAt?: string;
-}
-
-export interface VehicleListResponse {
-  data: Vehicle[];
-  nextCursor: string;
-  hasMore: boolean;
-}
+import { Vehicle, VehicleListResponse } from '../../interfaces/vehicle.interface';
 
 @Component({
   selector: 'app-list',
@@ -100,7 +83,7 @@ export class List implements OnInit {
     });
   }
 
-  removeVehicle(vehicleId: string) {
+  removeVehicle(vehicleId: number) {
     this.isLoading.set(true);
     this.http.delete(`/vehicle/${vehicleId}`).subscribe({
       next: () => {
@@ -248,7 +231,7 @@ export class List implements OnInit {
     this.onModalClose();
   }
 
-  onDelete(vehicleId: string) {
+  onDelete(vehicleId: number) {
     if (confirm('Tem certeza que deseja excluir este veículo?')) {
       this.removeVehicle(vehicleId);
     }
@@ -267,11 +250,19 @@ export class List implements OnInit {
   }
 
   updateVehicle(updatedVehicle: Vehicle) {
-    const index = this.vehicles().findIndex((v) => v.id === updatedVehicle.id);
-    if (index !== -1) {
-      this.vehicles()[index] = updatedVehicle;
-      this.updateTableConfig();
-    }
+    this.http.patch<Vehicle>(`/vehicle/${updatedVehicle.id}`, updatedVehicle).subscribe({
+      next: (createdVehicle) => {
+        this.vehicles.set(
+          this.vehicles().map((vehicle) =>
+            vehicle.id === createdVehicle.id ? createdVehicle : vehicle
+          )
+        );
+        this.updateTableConfig();
+      },
+      error: (error) => {
+        console.error('Erro ao atualizar veículo:', error);
+      },
+    });
   }
 
   // clearSearch() {
