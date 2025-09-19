@@ -13,15 +13,15 @@ import {
 import { HttpClient } from '@angular/common/http';
 
 export interface Vehicle {
-  id: string;
+  id?: string;
   plate: string;
   chassis: string;
-  renavam: string;
+  reindeer: string;
   model: string;
   brand: string;
   year: number;
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface VehicleListResponse {
@@ -87,7 +87,6 @@ export class List implements OnInit {
     console.log('Chamando URL:', url);
     this.http.get<VehicleListResponse>(url).subscribe({
       next: (response) => {
-        console.log('response', response);
         this.vehicles.update((prev) => [...prev, ...response.data]);
         this.nextCursor = response.nextCursor || '';
         this.hasMore.set(response.hasMore);
@@ -214,14 +213,15 @@ export class List implements OnInit {
         this.onEdit(event.item);
         break;
       case 'delete':
-        this.onDelete(event.item.id);
+        if (event.item?.id) {
+          this.onDelete(event.item.id);
+        }
         break;
     }
   }
 
   onEdit(vehicle: Vehicle) {
     this.selectedVehicle.set({ ...vehicle });
-    console.log('Editing vehicle:', this.selectedVehicle());
     this.modalTitle = 'Editar Veículo';
     this.isModalOpen.set(true);
   }
@@ -239,24 +239,13 @@ export class List implements OnInit {
 
   onVehicleSubmit(vehicle: Vehicle) {
     if (this.selectedVehicle()) {
-      const index = this.vehicles().findIndex((v) => v.id === this.selectedVehicle()!.id);
-      if (index !== -1) {
-        this.vehicles()[index] = { ...vehicle, id: this.selectedVehicle()!.id };
-      }
+      this.updateVehicle(vehicle);
     } else {
-      const newVehicle = {
-        ...vehicle,
-        id: this.generateId(),
-      };
-      this.vehicles().unshift(newVehicle);
+      this.addVehicle(vehicle);
     }
 
     this.updateTableConfig();
     this.onModalClose();
-  }
-
-  private generateId(): string {
-    return 'VEH' + Date.now().toString(36) + Math.random().toString(36).substr(2);
   }
 
   onDelete(vehicleId: string) {
@@ -266,8 +255,15 @@ export class List implements OnInit {
   }
 
   addVehicle(vehicle: Vehicle) {
-    this.vehicles.set([vehicle, ...this.vehicles()]);
-    this.updateTableConfig();
+    this.http.post<Vehicle>('/vehicle', vehicle).subscribe({
+      next: (createdVehicle) => {
+        this.vehicles.set([createdVehicle, ...this.vehicles()]);
+        this.updateTableConfig();
+      },
+      error: (error) => {
+        console.error('Erro ao cadastrar veículo:', error);
+      },
+    });
   }
 
   updateVehicle(updatedVehicle: Vehicle) {

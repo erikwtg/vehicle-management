@@ -57,7 +57,7 @@ export class CircuitBreakerService {
 
     this.breakers.set(name, breaker);
 
-    return breaker as CircuitBreaker<TArgs, TReturn>;
+    return breaker;
   }
 
   async call<TArgs extends any[], TReturn>(

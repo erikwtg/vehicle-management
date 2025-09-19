@@ -3,15 +3,15 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 export interface Vehicle {
-  id: string;
+  id?: string;
   plate: string;
   chassis: string;
-  renavam: string;
+  reindeer: string;
   model: string;
   brand: string;
   year: number;
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 @Component({
@@ -27,13 +27,12 @@ export class VehicleFormComponent {
   @Output() cancel = new EventEmitter<void>();
 
   formData: Vehicle = {
-    id: '',
     plate: '',
     chassis: '',
-    renavam: '',
+    reindeer: '',
     model: '',
     brand: '',
-    year: new Date().getFullYear(),
+    year: Number(),
   };
 
   errors: { [key: string]: string } = {};
@@ -65,10 +64,10 @@ export class VehicleFormComponent {
       isValid = false;
     }
 
-    if (!this.formData.renavam.trim()) {
+    if (!this.formData.reindeer.trim()) {
       this.errors['renavam'] = 'Renavam é obrigatório';
       isValid = false;
-    } else if (!/^\d{9,11}$/.test(this.formData.renavam)) {
+    } else if (!/^\d{9,11}$/.test(this.formData.reindeer)) {
       this.errors['renavam'] = 'Renavam deve ter entre 9 e 11 dígitos';
       isValid = false;
     }
@@ -107,10 +106,15 @@ export class VehicleFormComponent {
         ...this.formData,
         plate: this.formData.plate.toUpperCase(),
         chassis: this.formData.chassis.toUpperCase(),
-        id: this.isEditing ? this.vehicle?.id || this.generateId() : this.generateId(),
-        updatedAt: new Date(),
-        createdAt: this.isEditing ? this.vehicle?.createdAt : new Date(),
+        year: Number(this.formData.year),
       };
+
+      if (this.isEditing) {
+        Object.assign(vehicleData, {
+          id: this.vehicle?.id,
+          updatedAt: new Date(),
+        });
+      }
 
       this.vehicleSubmit.emit(vehicleData);
       this.isSubmitting = false;
@@ -133,7 +137,7 @@ export class VehicleFormComponent {
       id: '',
       plate: '',
       chassis: '',
-      renavam: '',
+      reindeer: '',
       model: '',
       brand: '',
       year: new Date().getFullYear(),
@@ -166,6 +170,6 @@ export class VehicleFormComponent {
     if (value.length > 11) {
       value = value.substr(0, 11);
     }
-    this.formData.renavam = value;
+    this.formData.reindeer = value;
   }
 }

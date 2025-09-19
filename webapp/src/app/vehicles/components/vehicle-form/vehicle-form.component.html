@@ -87,7 +87,7 @@
           type="text"
           id="renavam"
           name="renavam"
-          [(ngModel)]="formData.renavam"
+          [(ngModel)]="formData.reindeer"
           (input)="onRenavamInput($event)"
           placeholder="123456789"
           maxlength="11"
@@ -95,8 +95,8 @@
           [class.border-red-500]="errors['renavam']"
           [class.bg-red-50]="errors['renavam']"
           [class.animate-[shake_0.5s_ease-in-out]]="errors['renavam']"
-          [class.border-green-500]="!errors['renavam'] && formData.renavam"
-          [class.bg-green-50]="!errors['renavam'] && formData.renavam"
+          [class.border-green-500]="!errors['renavam'] && formData.reindeer"
+          [class.bg-green-50]="!errors['renavam'] && formData.reindeer"
           required
         />
         <p
