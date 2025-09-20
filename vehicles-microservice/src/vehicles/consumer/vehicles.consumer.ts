@@ -3,8 +3,8 @@ import { EventPattern, MessagePattern, Payload } from '@nestjs/microservices';
 import { VehicleService } from '../service/vehicle.service';
 import { CreateVehicleDto } from '../dto/create-vehicle.dto';
 import { UpdateVehicleDto } from '../dto/update-vehicle.dto';
-import { CursorPaginationDto } from 'src/common/dto/cursor-pagination.dto';
-import { VehicleIdempotencyError } from 'src/common/errors/vehicle.errors';
+import { CursorPaginationDto } from '../../common/dto/cursor-pagination.dto';
+import { VehicleIdempotencyError } from '../../common/errors/vehicle.errors';
 
 @Controller()
 export class VehiclesConsumer {

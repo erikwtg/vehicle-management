@@ -103,15 +103,14 @@ Depois de executar o comando de inicialização, você pode acessar as aplicaç�
 
 Embora o projeto tenha sido desenvolvido com as melhores práticas disponíveis dentro do tempo e dos requisitos do desafio, há algumas melhorias que gostaria de ter implementado:
 
-### SERVER
-
 1. Utilizar .env para configuração de variáveis de ambiente
 2. Testes Unitários: Gostaria de melhorar a implementação dos testes unitários, garantindo uma cobertura mais abrangente e a confiança na estabilidade do sistema.
 3. Observabilidade: A inclusão de logs e métricas mais detalhadas ajudaria a entender melhor o comportamento da aplicação.
 4. Tratamento de Erros e Validações: Embora o tratamento de erros no backend tenha sido abordado, gostaria de ter implementado uma validação de dados mais robusta e um sistema de feedback mais amigável para o usuário final.
-5. Validação de entrada de dados: Gostaria de ter implementado uma melhor validação de dados utilizando lib como zod para ter uma validação mais robusta.
-6. Gostaria também de ter implementado uma estrutura de login para autenticação de usuários.
-7. Documentação: Gostaria de ter documentado usando Swagger ou similar, facilitando a compreensão e o uso por parte de desenvolvedores e consumidores da API.
+5. Validação de entrada de dados: Gostaria de ter implementado uma melhor validação de dados utilizando lib como Zod para ter uma validação mais robusta.
+6. Melhorar a segurança: Gostaria de implementar autenticação e autorização para proteger os endpoints da API.
+7. Gostaria também de ter implementado uma estrutura de cadastro de usuários.
+8. Documentação: Gostaria de ter documentado usando Swagger ou similar, facilitando a compreensão e o uso por parte de desenvolvedores e consumidores da API.
 
 ## Tecnologias e Estruturas Utilizadas
 

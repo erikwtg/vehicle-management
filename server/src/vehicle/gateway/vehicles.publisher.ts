@@ -6,7 +6,7 @@ import {
 } from '@nestjs/microservices';
 import { firstValueFrom, TimeoutError } from 'rxjs';
 import { timeout } from 'rxjs/operators';
-import { CursorPaginationDto } from 'src/common/dto/cursor-pagination.dto';
+import { CursorPaginationDto } from '../../common/dto/cursor-pagination.dto';
 
 @Injectable()
 export class VehiclesPublisher {

@@ -3,7 +3,7 @@ import { db } from '../../config/drizzle/config';
 import { vehicles } from '../../config/database/schema';
 import { eq, gt, asc } from 'drizzle-orm';
 import { Vehicle } from '../entity/vehicle.entity';
-import { CursorPaginationDto } from 'src/common/dto/cursor-pagination.dto';
+import { CursorPaginationDto } from '../../common/dto/cursor-pagination.dto';
 
 @Injectable()
 export class VehicleRepository {

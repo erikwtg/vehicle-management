@@ -2,10 +2,10 @@ import { Injectable, OnModuleInit } from '@nestjs/common';
 import { CreateVehicleDto } from '../dto/create-vehicle.dto';
 import { ReturnVehicleDto } from '../dto/return-vehicle.dto';
 import { UpdateVehicleDto } from '../dto/update-vehicle.dto';
-import { CursorPaginationDto } from 'src/common/dto/cursor-pagination.dto';
+import { CursorPaginationDto } from '../../common/dto/cursor-pagination.dto';
 import { VehiclesPublisher } from '../gateway/vehicles.publisher';
 import { CursorPaginationResult } from '../types/pagination-result.type';
-import { CircuitBreakerService } from 'src/common/circuit-breaker/service/circuit-breaker.service';
+import { CircuitBreakerService } from '../../common/circuit-breaker/service/circuit-breaker.service';
 
 @Injectable()
 export class VehicleService implements OnModuleInit {

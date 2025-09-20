@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import CircuitBreaker from 'opossum';
-import { RpcServiceUnavailableError } from 'src/common/errors/rpc.errors';
+import { RpcServiceUnavailableError } from '../../errors/rpc.errors';
 
 @Injectable()
 export class CircuitBreakerService {

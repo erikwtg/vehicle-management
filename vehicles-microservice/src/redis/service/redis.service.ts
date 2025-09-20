@@ -35,4 +35,8 @@ export class RedisService {
     const value = String((await this.client.del(key)) || 0);
     return value;
   }
+
+  disconnect() {
+    this.client.disconnect();
+  }
 }

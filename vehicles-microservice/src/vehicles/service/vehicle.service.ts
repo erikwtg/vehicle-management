@@ -2,12 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { CreateVehicleDto } from '../dto/create-vehicle.dto';
 import { UpdateVehicleDto } from '../dto/update-vehicle.dto';
 import { VehicleRepository } from '../repository/vehicle.repository';
-import { CursorPaginationDto } from 'src/common/dto/cursor-pagination.dto';
+import { CursorPaginationDto } from '../../common/dto/cursor-pagination.dto';
 import {
   VehicleNotFoundError,
   VehicleAlreadyExistsError,
-} from 'src/common/errors/vehicle.errors';
-import { RedisService } from 'src/redis/service/redis.service';
+} from '../../common/errors/vehicle.errors';
+import { RedisService } from '../../redis/service/redis.service';
 
 @Injectable()
 export class VehicleService {
@@ -56,7 +56,7 @@ export class VehicleService {
   async findAll(pagination: CursorPaginationDto) {
     const vehicles = await this.vehicleRepository.getAllVehicles(pagination);
 
-    if (!vehicles) {
+    if (!vehicles || vehicles.length === 0) {
       throw new VehicleNotFoundError('Nenhum veículo encontrado');
     }
 
